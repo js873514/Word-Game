@@ -26,7 +26,6 @@ public class WordList : MonoBehaviour
 
 
 
-    // Private fields
     private string[] lines;
     private List<string> longWords;
     private List<string> words;
@@ -94,11 +93,6 @@ public class WordList : MonoBehaviour
 
                 // This yields execution until the next frame
                 yield return null;
-
-
-                // The yield will cause the execution of this method to wait
-                //  here while other code executes and then continue from this
-                //  point into the next iteration of the for loop.
             }
         }
 

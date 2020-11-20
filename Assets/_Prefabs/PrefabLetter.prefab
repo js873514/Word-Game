@@ -107,6 +107,7 @@ GameObject:
   - component: {fileID: 2966804500765521689}
   - component: {fileID: 9203801915640410664}
   - component: {fileID: 6668995093348414275}
+  - component: {fileID: 4421523925955759080}
   m_Layer: 0
   m_Name: PrefabLetter
   m_TagString: Untagged
@@ -192,3 +193,18 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &4421523925955759080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5071343799547222396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b66cc4946136c142a0269ef95aef22e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tMesh: {fileID: 0}
+  tRend: {fileID: 0}
+  big: 0
