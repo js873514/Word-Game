@@ -36,8 +36,9 @@ public class WordGame : MonoBehaviour
     public List<Wyrd> wyrds;
     public List<Letter> bigLetters;
     public List<Letter> bigLettersActive;
+    public string testWord;
 
-
+    private string upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private Transform letterAnchor, bigLetterAnchor;
 
 
@@ -305,4 +306,258 @@ public class WordGame : MonoBehaviour
             bigLettersActive[i].pos = pos;
         }
     }
+
+    void Update()
+    {
+        // Declare a couple useful local variables
+        Letter ltr;
+        char c;
+
+        switch (mode)
+        {
+            case GameMode.inLevel:
+
+                // Iterate through each char input by the player this frame
+                foreach (char cIt in Input.inputString)
+                {
+                    // Shift cIt to UPPERCASE
+                    c = System.Char.ToUpperInvariant(cIt);
+
+
+
+                    // Check to see if it's an uppercase letter
+                    if (upperCase.Contains(c))
+                    {
+                        // Find an available Letter in bigLetters with this char
+                        ltr = FindNextLetterByChar(c);
+
+                        // If a Letter was returned
+                        if (ltr != null)
+                        {
+                            // ... then add this char to the testWord and move
+                            testWord += c.ToString();
+
+                            // Move it from the inactive to the active List<>
+                            bigLettersActive.Add(ltr);
+                            bigLetters.Remove(ltr);
+                            ltr.color = bigColorSelected; // Make it look active
+                            ArrangeBigLetters();     // Rearrange the big Letters
+                        }
+                    }
+
+
+
+                    if (c == '\b')  // Backspace
+                    {
+                        // Remove the last Letter in bigLettersActive
+                        if (bigLettersActive.Count == 0) return;
+
+                        if (testWord.Length > 1)
+                        {
+                            // Clear the last char of testWord
+                            testWord = testWord.Substring(0, testWord.Length - 1);
+                        }
+                        else
+                        {
+                            testWord = "";
+                        }
+
+                        ltr = bigLettersActive[bigLettersActive.Count - 1];
+
+                        // Move it from the active to the inactive List<>
+                        bigLettersActive.Remove(ltr);
+                        bigLetters.Add(ltr);
+                        ltr.color = bigColorDim;    // Make it the inactive color
+                        ArrangeBigLetters();        // Rearrange the big Letters
+                    }
+
+
+
+                    if (c == '\n' || c == '\r') // Return/Enter macOS/Windows
+                    {
+                        // Test the testWord against the words in WordLevel
+                        CheckWord();
+                    }
+
+
+
+                    if (c == ' ') // Space
+                    {
+                        // Shuffle the bigLetters
+                        bigLetters = ShuffleLetters(bigLetters);
+                        ArrangeBigLetters();
+                    }
+                }
+
+                break;
+        }
+    }
+
+
+
+    // This finds an available Letter with the char c in bigLetters.
+
+    // If there isn't one available, it returns null.
+
+    Letter FindNextLetterByChar(char c)
+    {
+
+        // Search through each Letter in bigLetters
+
+        foreach (Letter ltr in bigLetters)
+        {
+
+            // If one has the same char as c
+
+            if (ltr.c == c)
+            {
+
+                // ...then return it
+
+                return (ltr);
+
+            }
+
+        }
+
+        return (null);  // Otherwise, return null
+
+    }
+
+
+
+    public void CheckWord()
+    {
+
+        // Test testWord against the level.subWords
+
+        string subWord;
+
+        bool foundTestWord = false;
+
+
+
+        // Create a List<int> to hold the indices of other subWords that are
+
+        //  contained within testWord
+
+        List<int> containedWords = new List<int>();
+
+
+
+        // Iterate through each word in currLevel.subWords
+
+        for (int i = 0; i < currLevel.subWords.Count; i++)
+        {
+
+
+
+            // Check whether the Wyrd has already been found
+
+            if (wyrds[i].found)
+            {                                            // a
+
+                continue;
+
+            }
+
+
+
+            subWord = currLevel.subWords[i];
+
+            // Check whether this subWord is the testWord or is contained in it
+
+            if (string.Equals(testWord, subWord))
+            {                          // b
+
+                HighlightWyrd(i);
+
+                foundTestWord = true;
+
+            }
+            else if (testWord.Contains(subWord))
+            {
+
+                containedWords.Add(i);
+
+            }
+
+        }
+
+
+
+        if (foundTestWord)
+        { // If the test word was found in subWords
+
+            // ...then highlight the other words contained in testWord
+
+            int numContained = containedWords.Count;
+
+            int ndx;
+
+            // Highlight the words in reverse order
+
+            for (int i = 0; i < containedWords.Count; i++)
+            {
+
+                ndx = numContained - i - 1;
+
+                HighlightWyrd(containedWords[ndx]);
+
+            }
+
+        }
+
+
+
+
+        // Clear the active big Letters regardless of whether testWord was valid
+
+        ClearBigLettersActive();
+
+    }
+
+
+
+    // Highlight a Wyrd
+
+    void HighlightWyrd(int ndx)
+    {
+
+        // Activate the subWord
+
+        wyrds[ndx].found = true;   // Let it know it's been found
+
+        // Lighten its color
+
+        wyrds[ndx].color = (wyrds[ndx].color + Color.white) / 2f;
+
+        wyrds[ndx].visible = true; // Make its 3D Text visible
+
+    }
+
+
+
+    // Remove all the Letters from bigLettersActive
+
+    void ClearBigLettersActive()
+    {
+
+        testWord = "";             // Clear the testWord
+
+        foreach (Letter ltr in bigLettersActive)
+        {
+
+            bigLetters.Add(ltr);     // Add each Letter to bigLetters
+
+            ltr.color = bigColorDim; // Set it to the inactive color
+
+        }
+
+        bigLettersActive.Clear();  // Clear the List<>
+
+        ArrangeBigLetters();       // Rearrange the Letters on screen
+
+    }
+
 }
