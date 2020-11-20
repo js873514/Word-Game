@@ -221,6 +221,88 @@ public class WordGame : MonoBehaviour
             }
         }
 
+        // Place the big letters
+        // Initialize the List<>s for big Letters
+        bigLetters = new List<Letter>();
+        bigLettersActive = new List<Letter>();
 
+        // Create a big Letter for each letter in the target word
+        for (int i = 0; i < currLevel.word.Length; i++)
+        {
+            // This is similar to the process for a normal Letter
+            c = currLevel.word[i];
+            go = Instantiate<GameObject>(prefabLetter);
+            go.transform.SetParent(bigLetterAnchor);
+            lett = go.GetComponent<Letter>();
+            lett.c = c;
+            go.transform.localScale = Vector3.one * bigLetterSize;
+
+            // Set the initial position of the big Letters below screen
+            pos = new Vector3(0, -100, 0);
+            lett.pos = pos;
+            col = bigColorDim;
+            lett.color = col;
+            lett.visible = true; // This is always true for big letters
+            lett.big = true;
+            bigLetters.Add(lett);
+
+        }
+
+        // Shuffle the big letters
+        bigLetters = ShuffleLetters(bigLetters);
+
+
+        // Arrange them on screen
+        ArrangeBigLetters();
+
+
+        // Set the mode to be in-game
+        mode = GameMode.inLevel;
+    }
+
+
+
+    // This method shuffles a List<Letter> randomly and returns the result
+    List<Letter> ShuffleLetters(List<Letter> letts)
+    {
+        List<Letter> newL = new List<Letter>();
+        int ndx;
+
+        while (letts.Count > 0)
+        {
+            ndx = Random.Range(0, letts.Count);
+            newL.Add(letts[ndx]);
+            letts.RemoveAt(ndx);
+        }
+
+        return (newL);
+    }
+
+
+
+    // This method arranges the big Letters on screen
+    void ArrangeBigLetters()
+    {
+        // The halfWidth allows the big Letters to be centered
+        float halfWidth = ((float)bigLetters.Count) / 2f - 0.5f;
+        Vector3 pos;
+
+        for (int i = 0; i < bigLetters.Count; i++)
+        {
+            pos = bigLetterCenter;
+            pos.x += (i - halfWidth) * bigLetterSize;
+            bigLetters[i].pos = pos;
+        }
+
+        // bigLettersActive
+        halfWidth = ((float)bigLettersActive.Count) / 2f - 0.5f;
+
+        for (int i = 0; i < bigLettersActive.Count; i++)
+        {
+            pos = bigLetterCenter;
+            pos.x += (i - halfWidth) * bigLetterSize;
+            pos.y += bigLetterSize * 1.25f;
+            bigLettersActive[i].pos = pos;
+        }
     }
 }
