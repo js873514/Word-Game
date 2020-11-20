@@ -396,167 +396,107 @@ public class WordGame : MonoBehaviour
 
 
     // This finds an available Letter with the char c in bigLetters.
-
-    // If there isn't one available, it returns null.
-
     Letter FindNextLetterByChar(char c)
     {
-
         // Search through each Letter in bigLetters
-
         foreach (Letter ltr in bigLetters)
         {
-
             // If one has the same char as c
-
             if (ltr.c == c)
             {
-
                 // ...then return it
-
                 return (ltr);
-
             }
-
         }
 
-        return (null);  // Otherwise, return null
-
+        return (null);
     }
 
 
 
     public void CheckWord()
     {
-
         // Test testWord against the level.subWords
-
         string subWord;
-
         bool foundTestWord = false;
 
 
-
         // Create a List<int> to hold the indices of other subWords that are
-
         //  contained within testWord
-
         List<int> containedWords = new List<int>();
 
-
-
         // Iterate through each word in currLevel.subWords
-
         for (int i = 0; i < currLevel.subWords.Count; i++)
         {
-
-
-
             // Check whether the Wyrd has already been found
-
             if (wyrds[i].found)
-            {                                            // a
-
+            {
                 continue;
-
             }
-
-
 
             subWord = currLevel.subWords[i];
 
             // Check whether this subWord is the testWord or is contained in it
-
             if (string.Equals(testWord, subWord))
-            {                          // b
-
+            {
                 HighlightWyrd(i);
-
+                ScoreManager.SCORE(wyrds[i], 1); // Score the testWord
                 foundTestWord = true;
-
             }
             else if (testWord.Contains(subWord))
             {
-
                 containedWords.Add(i);
-
             }
-
         }
 
 
-
+        // If the test word was found in subWords
         if (foundTestWord)
-        { // If the test word was found in subWords
-
+        {
             // ...then highlight the other words contained in testWord
-
             int numContained = containedWords.Count;
-
             int ndx;
 
             // Highlight the words in reverse order
-
             for (int i = 0; i < containedWords.Count; i++)
             {
-
                 ndx = numContained - i - 1;
-
                 HighlightWyrd(containedWords[ndx]);
-
+                ScoreManager.SCORE(wyrds[containedWords[ndx]], i + 2);
             }
-
         }
 
-
-
-
         // Clear the active big Letters regardless of whether testWord was valid
-
         ClearBigLettersActive();
-
     }
 
 
 
     // Highlight a Wyrd
-
     void HighlightWyrd(int ndx)
     {
-
         // Activate the subWord
-
         wyrds[ndx].found = true;   // Let it know it's been found
 
         // Lighten its color
-
         wyrds[ndx].color = (wyrds[ndx].color + Color.white) / 2f;
-
         wyrds[ndx].visible = true; // Make its 3D Text visible
-
     }
 
-
-
     // Remove all the Letters from bigLettersActive
-
     void ClearBigLettersActive()
     {
-
-        testWord = "";             // Clear the testWord
+        testWord = ""; // Clear the testWord
 
         foreach (Letter ltr in bigLettersActive)
         {
-
-            bigLetters.Add(ltr);     // Add each Letter to bigLetters
-
+            bigLetters.Add(ltr); // Add each Letter to bigLetters
             ltr.color = bigColorDim; // Set it to the inactive color
-
         }
 
-        bigLettersActive.Clear();  // Clear the List<>
+        bigLettersActive.Clear(); // Clear the List<>
 
-        ArrangeBigLetters();       // Rearrange the Letters on screen
+        ArrangeBigLetters(); // Rearrange the Letters on screen
 
     }
 
