@@ -79,15 +79,14 @@ public class WordGame : MonoBehaviour
     {
         WordLevel level = new WordLevel();
 
-        if (levelNum == -1)
+        if (levelNum++ == -1)
         {
             // Pick a random level
-            level.longWordIndex = Random.Range(0, WordList.LONG_WORD_COUNT);
+            level.longWordIndex = 9990; //Random.Range(0, WordList.LONG_WORD_COUNT);
         }
         else
         {
-            // This will be added later in the chapter
-
+            level.longWordIndex = 7510; // This will be added later in the chapter
         }
 
         level.levelNum = levelNum;
@@ -217,7 +216,7 @@ public class WordGame : MonoBehaviour
             if (showAllWyrds) wyrd.visible = true;
             wyrd.color = wyrdPalette[word.Length - WordList.WORD_LENGTH_MIN];
             wyrds.Add(wyrd);
-
+            
             // If we've gotten to the numRows(th) row, start a new column
             if (i % numRows == numRows - 1)
             {
@@ -394,6 +393,13 @@ public class WordGame : MonoBehaviour
                     }
                 }
 
+
+                if (Scoreboard.S.score >= 300)
+                {
+                    Scoreboard.S.score = 0;
+                    WordListParseComplete();
+                }
+                    
                 break;
         }
     }
@@ -426,8 +432,6 @@ public class WordGame : MonoBehaviour
         bool foundTestWord = false;
 
 
-        // Create a List<int> to hold the indices of other subWords that are
-        //  contained within testWord
         List<int> containedWords = new List<int>();
 
         // Iterate through each word in currLevel.subWords

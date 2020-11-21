@@ -50,7 +50,6 @@ public class WordList : MonoBehaviour
     }
 
 
-
     // All coroutines have IEnumerator as their return type.
     public IEnumerator ParseLines()
     {

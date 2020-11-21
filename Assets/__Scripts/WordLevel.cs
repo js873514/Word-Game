@@ -18,8 +18,6 @@ public class WordLevel
     public List<string> subWords;
 
 
-    // A static function that counts the instances of chars in a string and
-    // returns a Dictionary<char,int> that contains this information
     static public Dictionary<char, int> MakeCharDict(string w)
     {
         Dictionary<char, int> dict = new Dictionary<char, int>();
