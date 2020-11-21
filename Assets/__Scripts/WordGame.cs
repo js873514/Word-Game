@@ -28,7 +28,7 @@ public class WordGame : MonoBehaviour
     public Color bigColorDim = new Color(0.8f, 0.8f, 0.8f);
     public Color bigColorSelected = new Color(1f, 0.9f, 0.7f);
     public Vector3 bigLetterCenter = new Vector3(0, -16, 0);
-    //public Color[] wyrdPalette;
+    public Color[] wyrdPalette;
 
 
     [Header("Set Dynamically")]
@@ -193,10 +193,8 @@ public class WordGame : MonoBehaviour
             for (int j = 0; j < word.Length; j++)
             {
                 c = word[j]; // Grab the jth char of the word
-                print(word[j]);
                 go = Instantiate(prefabLetter);
                 go.transform.SetParent(letterAnchor);
-                print(go.GetComponent<Letter>());
                 lett = go.GetComponent<Letter>();
                 lett.c = c; // Set the c of the Letter
 
@@ -217,7 +215,7 @@ public class WordGame : MonoBehaviour
             }
 
             if (showAllWyrds) wyrd.visible = true;
-            //wyrd.color = wyrdPalette[word.Length - WordList.WORD_LENGTH_MIN];
+            wyrd.color = wyrdPalette[word.Length - WordList.WORD_LENGTH_MIN];
             wyrds.Add(wyrd);
 
             // If we've gotten to the numRows(th) row, start a new column
@@ -228,7 +226,6 @@ public class WordGame : MonoBehaviour
         }
 
         // Place the big letters
-        // Initialize the List<>s for big Letters
         bigLetters = new List<Letter>();
         bigLettersActive = new List<Letter>();
 
